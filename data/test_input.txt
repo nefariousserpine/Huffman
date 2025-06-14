@@ -1,0 +1,1 @@
+this is a simple huffman encoding test
