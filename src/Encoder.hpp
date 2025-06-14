@@ -26,7 +26,9 @@ class Encoder {
         std::vector<bool> encode(const std::vector<unsigned char>& data) const;
 
         // Returns the root node of the Huffman tree.
-        TreeNode::Ptr getRoot() const;
+        TreeNode::Ptr getRoot() const {
+            return root_;
+        }
 
     private:
         TreeNode::Ptr root_;  // Root of the Huffman tree.
