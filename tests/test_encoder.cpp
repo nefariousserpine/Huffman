@@ -7,7 +7,7 @@
 int main() {
     int failures = 0;
 
-    // Test 1: Code map has exactly one entry per unique symbol?
+    // Test 1: Code map has exactly one entry per unique symbol
     {
         std::vector<unsigned char> data = {'a','b','a','c','a','b','d'};
         Encoder encoder;
@@ -31,7 +31,7 @@ int main() {
         }
     }
 
-    // Test 2: Bitstring length matches sum(freq * code length)?
+    // Test 2: Bitstring length matches sum(freq * code length)
     {
         std::vector<unsigned char> data = {'a','b','a','c','a','b','d'};
         std::unordered_map<unsigned char, size_t> freq;
@@ -56,7 +56,7 @@ int main() {
         }
     }
 
-    // Test 3: Errors on empty build() and encode without build()?
+    // Test 3: Errors on empty build() and encode without build()
     {
         Encoder encoder;
         bool ok = false;
