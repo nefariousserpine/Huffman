@@ -1,4 +1,3 @@
-// src/Encoder.cpp
 #include "Encoder.hpp"
 #include <queue>
 #include <stdexcept>
@@ -8,32 +7,32 @@ void Encoder::build(const std::vector<unsigned char>& data) {
         throw std::invalid_argument("build(): input is empty");
     }
 
-    // Count how often each byte shows up
+    // Build frequency table for all symbols in the input.
     std::unordered_map<unsigned char, size_t> freqTable;
     for (auto byte : data) {
         ++freqTable[byte];
     }
 
-    // Convert the counts into a Huffman tree
+    // Construct the Huffman tree from the frequency table.
     root_ = buildTree(freqTable);
 
-    // Construct the byte -> bits map
+    // Generate symbol-to-code mapping from the tree.
     codeMap_.clear();
     buildCodeMap(root_, Code{});
 }
 
 std::vector<bool> Encoder::encode(const std::vector<unsigned char>& data) const {
     if (codeMap_.empty()) {
-        throw std::logic_error("encode(): need to call build() first");
+        throw std::logic_error("encode(): build() must be called first");
     }
 
     std::vector<bool> bits;
 
-    // Look up each byte’s code and append it
+    // Encode each symbol using the code map.
     for (auto byte : data) {
         auto it = codeMap_.find(byte);
         if (it == codeMap_.end()) {
-            throw std::runtime_error("encode(): symbol not in code map");
+            throw std::runtime_error("encode(): symbol not found in code map");
         }
         bits.insert(bits.end(), it->second.begin(), it->second.end());
     }
@@ -41,19 +40,19 @@ std::vector<bool> Encoder::encode(const std::vector<unsigned char>& data) const 
 }
 
 TreeNode::Ptr Encoder::buildTree(const std::unordered_map<unsigned char, size_t>& freq) const {
-    // Min-heap that pops the node with smallest frequency first
+    // Min-heap ordered by node frequency.
     std::priority_queue<
         TreeNode::Ptr,
         std::vector<TreeNode::Ptr>,
         TreeNode::Compare
     > pq;
 
-    // Start with each byte as its own leaf
-    for (auto const& kv : freq) {
+    // Create a leaf node for each symbol.
+    for (const auto& kv : freq) {
         pq.push(std::make_shared<TreeNode>(kv.first, kv.second));
     }
 
-    // Merge until there’s only one tree left
+    // Merge nodes until a single tree remains.
     while (pq.size() > 1) {
         auto left  = pq.top(); pq.pop();
         auto right = pq.top(); pq.pop();
@@ -64,29 +63,22 @@ TreeNode::Ptr Encoder::buildTree(const std::unordered_map<unsigned char, size_t>
 }
 
 void Encoder::buildCodeMap(const TreeNode::Ptr& node, Code prefix) {
-    // If this is a leaf, save the prefix as its code
+    // Store code for leaf node.
     if (node->isLeaf()) {
         codeMap_.emplace(node->symbol, prefix);
         return;
     }
 
-    // Otherwise, go left (0) then right (1)
+    // Traverse left subtree (add 0 to prefix).
     if (node->left) {
         prefix.push_back(false);
         buildCodeMap(node->left, prefix);
         prefix.pop_back();
     }
+
+    // Traverse right subtree (add 1 to prefix).
     if (node->right) {
         prefix.push_back(true);
         buildCodeMap(node->right, prefix);
-        // No need to pop here since prefix is local to each call
     }
-}
-
-TreeNode::Ptr Encoder::getRoot() const {
-    return root_;
-}
-
-const std::unordered_map<unsigned char, std::vector<bool>>& Encoder::getCodeMap() const {
-    return codeMap_;
 }
