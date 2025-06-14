@@ -1,23 +1,19 @@
-// src/TreeNode.cpp
 #include "TreeNode.hpp"
 
-// Leaf-node constructor.
-// Initialize with the given symbol and its count. No children.
+// Constructor for Leaf Node.
+// Initialize with the given symbol and its count.
 TreeNode::TreeNode(unsigned char sym, size_t freq)
-    : symbol(sym), frequency(freq), left(nullptr), right(nullptr)
-{}
+    : symbol(sym), frequency(freq), left(nullptr), right(nullptr) {}
 
-// Internal-node constructor.
+// Constructor for Internal Node.
 // Combine two subtrees into a new node. Frequency is summed.
-// symbol is set to 0 since it isn’t used for internal nodes.
+// Symbol is set to 0 for internal nodes.
 TreeNode::TreeNode(Ptr leftChild, Ptr rightChild)
     : symbol(0),
       frequency(leftChild->frequency + rightChild->frequency),
       left(std::move(leftChild)),
-      right(std::move(rightChild))
-{}
+      right(std::move(rightChild)) {}
 
-// Check for leaf status.
 // A node is a leaf if it has neither left nor right child.
 bool TreeNode::isLeaf() const {
     return !left && !right;
