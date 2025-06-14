@@ -1,5 +1,3 @@
-// tests/test_decoder.cpp
-
 #include <iostream>
 #include <vector>
 #include <stdexcept>
@@ -10,7 +8,7 @@
 int main() {
     int failures = 0;
 
-    // Test 1: simple two-symbol tree decoding
+    // Test 1: Simple two-symbol tree decoding
     {
         auto left  = std::make_shared<TreeNode>('A', 1);
         auto right = std::make_shared<TreeNode>('B', 1);
@@ -35,7 +33,7 @@ int main() {
         }
     }
 
-    // Test 2: errors on missing tree or invalid bits
+    // Test 2: Errors on missing tree or invalid bits
     {
         Decoder decoder;
         bool ok = false;
@@ -85,5 +83,3 @@ int main() {
 
     return (failures == 0 ? 0 : 1);
 }
-
-// g++ -std=c++17 -O2 src/TreeNode.cpp src/Decoder.cpp tests/test_decoder.cpp -Isrc -o test_decoder
