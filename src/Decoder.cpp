@@ -1,4 +1,3 @@
-// src/Decoder.cpp
 #include "Decoder.hpp"
 #include <stdexcept>
 
@@ -14,31 +13,29 @@ std::vector<unsigned char> Decoder::decode(const std::vector<bool>& bits) const 
         throw std::logic_error("decode(): Huffman tree not set; call setTree() first");
     }
     if (bits.empty()) {
-        return {};  // nothing to do
+        return {};
     }
 
     std::vector<unsigned char> output;
-
-    // Start at the top of the tree
     auto node = root_;
+
+    // Traverse the tree according to each bit.
     for (bool bit : bits) {
-        // Walk left or right based on the bit
         node = bit ? node->right : node->left;
         if (!node) {
-            throw std::runtime_error("decode(): bit sequence led to a null node");
+            throw std::runtime_error("decode(): bit sequence led to an invalid path");
         }
 
-        // If we’ve hit a leaf, emit its symbol and reset to root
+        // Emit symbol upon reaching a leaf and reset traversal.
         if (node->isLeaf()) {
             output.push_back(node->symbol);
             node = root_;
         }
     }
 
-    // Ideally, we should end exactly at the root again,
-    // otherwise the bit stream ended mid-symbol.
+    // Final position must be at the root to ensure complete decoding.
     if (node != root_) {
-        throw std::runtime_error("decode(): incomplete bit sequence (truncated code at end)");
+        throw std::runtime_error("decode(): incomplete bit sequence");
     }
 
     return output;
