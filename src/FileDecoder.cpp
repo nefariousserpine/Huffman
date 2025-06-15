@@ -1,4 +1,3 @@
-// FileDecoder.cpp
 #include "FileDecoder.hpp"
 #include <fstream>
 #include <stdexcept>
@@ -11,28 +10,28 @@ void FileDecoder::decodeFile(const std::string& inputFile,
         throw std::runtime_error("decodeFile: cannot open input file: " + inputFile);
     }
 
-    // 1) Reconstruct the Huffman tree
+    // Reconstruct the Huffman tree
     TreeNode::Ptr root = deserializeTree(in);
     if (!root) {
         throw std::runtime_error("decodeFile: failed to deserialize tree");
     }
 
-    // 2) Read the bit count
+    // Read the bit count
     uint64_t bitCount = 0;
     in.read(reinterpret_cast<char*>(&bitCount), sizeof(bitCount));
     if (!in) {
         throw std::runtime_error("decodeFile: failed to read bit count");
     }
 
-    // 3) Read the packed bitstream
+    // Read the packed bitstream
     std::vector<bool> bits = readBits(in, bitCount);
 
-    // 4) Decode to original bytes
+    // Decode to original bytes
     Decoder decoder;
     decoder.setTree(root);
     std::vector<unsigned char> decoded = decoder.decode(bits);
 
-    // 5) Write decoded bytes to output file
+    // Write decoded bytes to output file
     std::ofstream out(outputFile, std::ios::binary);
     if (!out) {
         throw std::runtime_error("decodeFile: cannot open output file: " + outputFile);
