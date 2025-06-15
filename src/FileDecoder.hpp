@@ -1,4 +1,3 @@
-// FileDecoder.hpp
 #ifndef FILE_DECODER_HPP
 #define FILE_DECODER_HPP
 
@@ -25,4 +24,4 @@ private:
     std::vector<bool> readBits(std::istream& in, uint64_t bitCount) const;
 };
 
-#endif // FILE_DECODER_HPP
+#endif 
