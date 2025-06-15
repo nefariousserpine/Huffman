@@ -1,7 +1,3 @@
-// FileDecoderTest.cpp
-// A test that writes a sample text file, encodes it via FileEncoder,
-// then decodes it via FileDecoder and verifies the result.
-
 #include "FileEncoder.hpp"
 #include "FileDecoder.hpp"
 
@@ -29,14 +25,14 @@ int main() {
     const std::string encodedBin = "test_out.huff";
     const std::string decodedTxt = "test_decoded.txt";
 
-    // 1) Write sample input
+    // Write sample input
     {
         std::ofstream out(inputTxt, std::ios::binary);
         assert(out && "Cannot create input file");
         out << "huffman roundtrip test";
     }
 
-    // 2) Encode -> .huff
+    // Encode -> .huff
     {
         FileEncoder fe;
         fe.encodeFile(inputTxt, encodedBin);
@@ -52,18 +48,18 @@ int main() {
         assert((marker == 'L' || marker == 'I') && "Bad tree marker");
     }
 
-    // 3) Decode -> txt
+    // Decode -> txt
     {
         FileDecoder fd;
         fd.decodeFile(encodedBin, decodedTxt);
     }
 
-    // 4) Verify round‑trip
+    // Verify round‑trip
     std::string original = readAll(inputTxt);
     std::string result   = readAll(decodedTxt);
     assert(result == original && "Decoded text differs from original");
 
-    // 5) Cleanup
+    // Cleanup
     std::remove(inputTxt.c_str());
     std::remove(encodedBin.c_str());
     std::remove(decodedTxt.c_str());
