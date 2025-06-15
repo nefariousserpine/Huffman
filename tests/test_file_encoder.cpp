@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <cassert>
-#include <cstdio>  // for remove, fopen, fseek, ftell
+#include <cstdio>  
 
 // Helper function to get file size
 std::streampos getFileSize(const std::string& filename) {
@@ -20,14 +20,14 @@ int main() {
     const std::string inputPath = "test_input.txt";
     const std::string outputPath = "test_output.huff";
 
-    // 1) Create a sample input file
+    // Create a sample input file
     {
         std::ofstream out(inputPath, std::ios::binary);
         assert(out && "Failed to create input file");
         out << "huffman test";
     }
 
-    // 2) Encode the file
+    // Encode the file
     try {
         FileEncoder encoder;
         encoder.encodeFile(inputPath, outputPath);
@@ -36,12 +36,12 @@ int main() {
         return 1;
     }
 
-    // 3) Validate that output file exists and has data
+    // Validate that output file exists and has data
     assert(fileExists(outputPath) && "Output file not created");
     std::streamsize size = getFileSize(outputPath);
     assert(size > 0 && "Output file is empty");
 
-    // 4) Validate the first byte is a valid tree marker
+    // Validate the first byte is a valid tree marker
     {
         std::ifstream in(outputPath, std::ios::binary);
         assert(in && "Failed to open output file");
@@ -52,7 +52,7 @@ int main() {
         std::cout << "  [OK] Tree marker = '" << marker << "'\n";
     }
 
-    // 5) Cleanup
+    // Cleanup
     std::remove(inputPath.c_str());
     std::remove(outputPath.c_str());
 
