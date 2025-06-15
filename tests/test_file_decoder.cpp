@@ -21,9 +21,9 @@ bool fileExists(const std::string& path) {
 }
 
 int main() {
-    const std::string inputTxt   = "test_in.txt";
-    const std::string encodedBin = "test_out.huff";
-    const std::string decodedTxt = "test_decoded.txt";
+    const std::string inputTxt   = "data/test_input.txt";
+    const std::string encodedBin = "data/test_output.huff";
+    const std::string decodedTxt = "data/restored.txt";
 
     // Write sample input
     {

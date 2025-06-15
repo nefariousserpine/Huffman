@@ -17,8 +17,8 @@ bool fileExists(const std::string& filename) {
 }
 
 int main() {
-    const std::string inputPath = "test_input.txt";
-    const std::string outputPath = "test_output.huff";
+    const std::string inputPath = "data/test_input.txt";
+    const std::string outputPath = "data/test_output.huff";
 
     // Create a sample input file
     {
