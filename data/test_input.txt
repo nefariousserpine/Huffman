@@ -1,1 +1,1 @@
-This is a test for Huffman encoding through files. ()()
+huffman test
