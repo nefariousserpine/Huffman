@@ -9,7 +9,9 @@
 // Helper function to read file contents as a string
 std::string readFileToString(const std::string& path) {
     std::ifstream in(path, std::ios::binary);
-    return std::string(std::istreambuf_iterator<char>(in), {});
+    std::istreambuf_iterator<char> begin(in);
+    std::istreambuf_iterator<char> end;
+    return std::string(begin, end);
 }
 
 int main() {

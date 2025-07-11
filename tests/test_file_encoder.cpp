@@ -24,8 +24,19 @@ int main() {
     {
         std::ofstream out(inputPath, std::ios::binary);
         assert(out && "Failed to create input file");
-        out << "huffman test";
+        out << "huffman test for file encoder?";
     }
+
+    {
+    std::ifstream in(inputPath, std::ios::binary);
+    assert(in && "Failed to open input file");
+
+    std::istreambuf_iterator<char> begin(in);
+    std::istreambuf_iterator<char> end;
+    std::string content(begin, end);
+
+    std::cout << "File contents: " << content << '\n';
+}
 
     // Encode the file
     try {
@@ -51,10 +62,6 @@ int main() {
         assert((marker == 'I' || marker == 'L') && "Invalid tree marker");
         std::cout << "  [OK] Tree marker = '" << marker << "'\n";
     }
-
-    // Cleanup
-    std::remove(inputPath.c_str());
-    std::remove(outputPath.c_str());
 
     std::cout << "FileEncoder test passed.\n";
     return 0;

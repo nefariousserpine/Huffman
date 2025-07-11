@@ -10,8 +10,9 @@
 std::string readAll(const std::string& path) {
     std::ifstream in(path, std::ios::binary);
     assert(in && "readAll: cannot open file");
-    return std::string((std::istreambuf_iterator<char>(in)),
-                       std::istreambuf_iterator<char>());
+    std::istreambuf_iterator<char> begin(in);
+    std::istreambuf_iterator<char> end;
+    return std::string(begin, end);
 }
 
 // Helper: check file existence
@@ -58,11 +59,6 @@ int main() {
     std::string original = readAll(inputTxt);
     std::string result   = readAll(decodedTxt);
     assert(result == original && "Decoded text differs from original");
-
-    // Cleanup
-    std::remove(inputTxt.c_str());
-    std::remove(encodedBin.c_str());
-    std::remove(decodedTxt.c_str());
 
     std::cout << "FileDecoder round - trip test passed.\n";
     return 0;
