@@ -18,7 +18,14 @@ void FileDecoder::decodeFile(const std::string& inputFile,
 
     // Read the bit count
     uint64_t bitCount = 0;
-    in.read(reinterpret_cast<char*>(&bitCount), sizeof(bitCount));
+    for (int i = 0; i < 8; i++) {
+        unsigned char byte = in.get();
+        if (in.eof()) {
+            throw std::runtime_error("Unexpected end of stream while reading uint64_t");
+        }
+        bitCount |= static_cast<uint64_t>(byte) << (8 * i);
+    }
+
     if (!in) {
         throw std::runtime_error("decodeFile: failed to read bit count");
     }
@@ -36,7 +43,8 @@ void FileDecoder::decodeFile(const std::string& inputFile,
     if (!out) {
         throw std::runtime_error("decodeFile: cannot open output file: " + outputFile);
     }
-    out.write(reinterpret_cast<const char*>(decoded.data()), decoded.size());
+    std::vector<char> charData(decoded.begin(), decoded.end());
+    out.write(charData.data(), charData.size());
 }
 
 TreeNode::Ptr FileDecoder::deserializeTree(std::istream& in) const {

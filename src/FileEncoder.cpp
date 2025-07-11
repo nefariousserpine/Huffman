@@ -10,10 +10,7 @@ void FileEncoder::encodeFile(const std::string& inputFile, const std::string& ou
     }
 
     // Read input data
-    std::vector<unsigned char> inputData(
-        (std::istreambuf_iterator<char>(in)),
-        std::istreambuf_iterator<char>()
-    );
+    std::vector<unsigned char> inputData(std::istreambuf_iterator<char>(in), {});
     in.close();
 
     if (inputData.empty()) {
@@ -35,7 +32,11 @@ void FileEncoder::encodeFile(const std::string& inputFile, const std::string& ou
 
     // Write size of encoded bit stream (to know how many bits to read during decoding)
     uint64_t bitCount = encodedBits.size();
-    out.write(reinterpret_cast<const char*>(&bitCount), sizeof(bitCount));
+    std::vector<char> bytes(8);
+    for (int i = 0; i < 8; ++i) {
+        bytes[i] = static_cast<char>((bitCount >> (8 * i)) & 0xFF);
+    }
+    out.write(bytes.data(), bytes.size());
 
     // Write encoded bits
     writeBits(out, encodedBits);

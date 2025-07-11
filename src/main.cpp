@@ -9,7 +9,7 @@
 
 int main() {
     // Input text to be encoded
-    std::string inputText = "huffman encoding test";
+    std::string inputText = "huffman encoding test, what the";
     std::vector<unsigned char> inputData(inputText.begin(), inputText.end());
 
     // Build the Huffman encoder and generate code map
