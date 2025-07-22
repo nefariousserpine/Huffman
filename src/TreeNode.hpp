@@ -10,11 +10,10 @@ class TreeNode {
     public:
         using Ptr = std::shared_ptr<TreeNode>;
 
-        // The symbol (0–255) stored in this node.
-        // Valid only if isLeaf() == true.
+        // The symbol (0–255) stored in a leaf node.
         unsigned char symbol;   
 
-        // Leaf Node: Frequence of the symbol. 
+        // Leaf Node: Frequency of the symbol. 
         // Internal Node: Sum of frequencies of both children.
         size_t frequency;
 
@@ -25,9 +24,7 @@ class TreeNode {
         // Build a leaf node for 'sym' that appears 'freq' times.
         TreeNode(unsigned char sym, size_t freq);
 
-        // Build an internal node by joining two subtrees.
-        // Sets frequency = left->frequency + right->frequency.
-        // symbol is unused for internals.
+        // Build internal node by joining two subtrees.
         TreeNode(Ptr leftChild, Ptr rightChild);
 
         // True if this node has no children (i.e., is a leaf).
