@@ -9,7 +9,7 @@ void FileEncoder::encodeFile(const std::string& inputFile, const std::string& ou
         throw std::runtime_error("Failed to open input file: " + inputFile);
     }
 
-    // Read input data
+    // read input data
     std::vector<unsigned char> inputData(std::istreambuf_iterator<char>(in), {});
     in.close();
 
@@ -17,7 +17,7 @@ void FileEncoder::encodeFile(const std::string& inputFile, const std::string& ou
         throw std::runtime_error("Input file is empty: " + inputFile);
     }
 
-    // Encode data
+    // encode data
     Encoder encoder;
     encoder.build(inputData);
     std::vector<bool> encodedBits = encoder.encode(inputData);
@@ -27,10 +27,10 @@ void FileEncoder::encodeFile(const std::string& inputFile, const std::string& ou
         throw std::runtime_error("Failed to open output file: " + outputFile);
     }
 
-    // Serialize the Huffman tree
+    // serialize the Huffman tree
     serializeTree(out, encoder.getRoot());
 
-    // Write size of encoded bit stream (to know how many bits to read during decoding)
+    // write size of encoded bit stream
     uint64_t bitCount = encodedBits.size();
     std::vector<char> bytes(8);
     for (int i = 0; i < 8; ++i) {
@@ -38,7 +38,7 @@ void FileEncoder::encodeFile(const std::string& inputFile, const std::string& ou
     }
     out.write(bytes.data(), bytes.size());
 
-    // Write encoded bits
+    // write encoded bits
     writeBits(out, encodedBits);
 
     out.close();
@@ -60,7 +60,7 @@ void FileEncoder::writeBits(std::ostream& out, const std::vector<bool>& bits) co
         }
     }
 
-    // Write remaining bits if the last byte is not complete
+    // write remaining bits (last byte is not complete)
     if (bitIndex > 0) {
         out.put(byte);
     }
@@ -68,11 +68,11 @@ void FileEncoder::writeBits(std::ostream& out, const std::vector<bool>& bits) co
 
 void FileEncoder::serializeTree(std::ostream& out, const TreeNode::Ptr& node) const {
     if (node->isLeaf()) {
-        // Write a marker for leaf node
+        // leaf node marker
         out.put('L');
         out.put(node->symbol);
     } else {
-        // Internal node marker
+        // internal node marker
         out.put('I');
         serializeTree(out, node->left);
         serializeTree(out, node->right);
