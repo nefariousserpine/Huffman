@@ -10,13 +10,13 @@ void FileDecoder::decodeFile(const std::string& inputFile,
         throw std::runtime_error("decodeFile: cannot open input file: " + inputFile);
     }
 
-    // Reconstruct the Huffman tree
+    // reconstruct Huffman tree
     TreeNode::Ptr root = deserializeTree(in);
     if (!root) {
         throw std::runtime_error("decodeFile: failed to deserialize tree");
     }
 
-    // Read the bit count
+    // read the bit count
     uint64_t bitCount = 0;
     for (int i = 0; i < 8; i++) {
         unsigned char byte = in.get();
@@ -30,15 +30,15 @@ void FileDecoder::decodeFile(const std::string& inputFile,
         throw std::runtime_error("decodeFile: failed to read bit count");
     }
 
-    // Read the packed bitstream
+    // read packed bitstream
     std::vector<bool> bits = readBits(in, bitCount);
 
-    // Decode to original bytes
+    // decode to original bytes
     Decoder decoder;
     decoder.setTree(root);
     std::vector<unsigned char> decoded = decoder.decode(bits);
 
-    // Write decoded bytes to output file
+    // write decoded bytes to output file
     std::ofstream out(outputFile, std::ios::binary);
     if (!out) {
         throw std::runtime_error("decodeFile: cannot open output file: " + outputFile);
@@ -54,11 +54,9 @@ TreeNode::Ptr FileDecoder::deserializeTree(std::istream& in) const {
     }
 
     if (marker == 'L') {
-        // Leaf: next byte is symbol
         unsigned char sym = static_cast<unsigned char>(in.get());
         return std::make_shared<TreeNode>(sym, 0);
     } else if (marker == 'I') {
-        // Internal: recursively read children
         TreeNode::Ptr left  = deserializeTree(in);
         TreeNode::Ptr right = deserializeTree(in);
         return std::make_shared<TreeNode>(left, right);
