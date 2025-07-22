@@ -6,14 +6,14 @@
 
 class FileEncoder {
 public:
-    // Encodes the contents of inputFile, writes the Huffman tree and encoded data to outputFile
+    // encode contents of input file, write the Huffman tree and encoded data to output file
     void encodeFile(const std::string& inputFile, const std::string& outputFile);
 
 private:
-    // Writes bits as packed bytes to a binary stream
+    // write bits as packed bytes
     void writeBits(std::ostream& out, const std::vector<bool>& bits) const;
 
-    // Serializes the Huffman tree into a binary stream
+    // serialize the Huffman tree into a binary stream
     void serializeTree(std::ostream& out, const TreeNode::Ptr& node) const;
 };
 
