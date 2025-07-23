@@ -10,13 +10,11 @@ void FileDecoder::decodeFile(const std::string& inputFile,
         throw std::runtime_error("decodeFile: cannot open input file: " + inputFile);
     }
 
-    // reconstruct Huffman tree
     TreeNode::Ptr root = deserializeTree(in);
     if (!root) {
         throw std::runtime_error("decodeFile: failed to deserialize tree");
     }
 
-    // read the bit count
     uint64_t bitCount = 0;
     for (int i = 0; i < 8; i++) {
         unsigned char byte = in.get();
@@ -30,15 +28,12 @@ void FileDecoder::decodeFile(const std::string& inputFile,
         throw std::runtime_error("decodeFile: failed to read bit count");
     }
 
-    // read packed bitstream
     std::vector<bool> bits = readBits(in, bitCount);
 
-    // decode to original bytes
     Decoder decoder;
     decoder.setTree(root);
     std::vector<unsigned char> decoded = decoder.decode(bits);
 
-    // write decoded bytes to output file
     std::ofstream out(outputFile, std::ios::binary);
     if (!out) {
         throw std::runtime_error("decodeFile: cannot open output file: " + outputFile);
