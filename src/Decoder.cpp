@@ -19,21 +19,18 @@ std::vector<unsigned char> Decoder::decode(const std::vector<bool>& bits) const 
     std::vector<unsigned char> output;
     auto node = root_;
 
-    // Traverse the tree according to each bit.
     for (bool bit : bits) {
         node = bit ? node->right : node->left;
         if (!node) {
             throw std::runtime_error("decode(): bit sequence led to an invalid path");
         }
 
-        // Emit symbol upon reaching a leaf and reset traversal.
         if (node->isLeaf()) {
             output.push_back(node->symbol);
             node = root_;
         }
     }
 
-    // Final position must be at the root to ensure complete decoding.
     if (node != root_) {
         throw std::runtime_error("decode(): incomplete bit sequence");
     }
